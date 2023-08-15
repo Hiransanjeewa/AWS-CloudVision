@@ -11,13 +11,6 @@ end_date = '2023-08-14'
 
 service="Amazon Elastic Compute Cloud - Compute"
 
-
-
-import boto3
-
-# Replace with your own values
-aws_access_key_id = 'YOUR_ACCESS_KEY'
-aws_secret_access_key = 'YOUR_SECRET_KEY'
 region_name = 'us-east-1'  # Replace with your desired region
 
 # Create a Boto3 EC2 client
@@ -27,11 +20,16 @@ ec2 = boto3.client('ec2', aws_access_key_id=aws_access_key_id, aws_secret_access
 response = ec2.describe_instances(Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
 
 # Get the count of running instances
-running_instance_count = sum(len(reservation['Instances']) for reservation in response['Reservations'])
-
-print(f"Number of running EC2 instances: {running_instance_count}")
+#running_instance_count = sum(len(reservation['Instances']) for reservation in response['Reservations'])
 
 
+for reservation in response['Reservations']:
+    
+    # Get instance details from here
+    #print(reservation['Instances']) 
+    print( ' Instance type : '+reservation['Instances'][0]['InstanceType'] )
+    
+    #print(response)
 
 
 

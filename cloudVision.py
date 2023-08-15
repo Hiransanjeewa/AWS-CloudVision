@@ -24,11 +24,12 @@ response = ec2.describe_instances(Filters=[{'Name': 'instance-state-name', 'Valu
 
 
 for reservation in response['Reservations']:
-    #print(reservation['Instances'])
+    
+    # Get instance details from here
+    #print(reservation['Instances']) 
     print( ' Instance type : '+reservation['Instances'][0]['InstanceType'] )
     
-#print(f"Number of running EC2 instances: {running_instance_count}")
-#print(response)
+    #print(response)
 
 
 
