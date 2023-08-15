@@ -11,48 +11,28 @@ end_date = '2023-08-14'
 
 service="Amazon Elastic Compute Cloud - Compute"
 
+region_name = 'us-east-1'  # Replace with your desired region
+
+# Create a Boto3 EC2 client
+ec2 = boto3.client('ec2', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=region_name)
+
+# Describe instances and filter by the "running" state
+response = ec2.describe_instances(Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
+
+# Get the count of running instances
+#running_instance_count = sum(len(reservation['Instances']) for reservation in response['Reservations'])
+
+
+for reservation in response['Reservations']:
+    #print(reservation['Instances'])
+    print( ' Instance type : '+reservation['Instances'][0]['InstanceType'] )
+    
+#print(f"Number of running EC2 instances: {running_instance_count}")
+#print(response)
 
 
 
-# Get all created ec2 instances with cost 
-ce = boto3.client('ce', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name='us-east-1')
 
-# Define the filter for your query (optional)
-filter = {
-    "And": [
-             {
-            "Dimensions": {
-                "Key": "LINKED_ACCOUNT",
-                "Values": [aws_account_id]  # Replace with your AWS account ID
-            }
-        },
-        {
-            "Dimensions": {
-                "Key": "SERVICE",
-                "Values": [service]  # Add specific service values here
-            }
-        }
-    ]
-}
-
-# Get cost and usage data
-response = ce.get_cost_and_usage(
-    TimePeriod={
-        'Start': start_date,
-        'End': end_date
-    },
-    Granularity='DAILY',
-    Metrics=['UnblendedCost', 'UsageQuantity'],  # Add more metrics as needed
-    Filter=filter
-)
-
-# Print cost and usage data
-for result_by_time in response['ResultsByTime']:
-    print(result_by_time['Total']['UnblendedCost']['Amount'])
-    print(f"Date: {result_by_time['TimePeriod']['Start']} - {result_by_time['TimePeriod']['End']}")
-    print(f"Unblended Cost: {result_by_time['Total']['UnblendedCost']['Amount']} {result_by_time['Total']['UnblendedCost']['Unit']}")
-    print(f"Usage Quantity: {result_by_time['Total']['UsageQuantity']['Amount']} {result_by_time['Total']['UsageQuantity']['Unit']}")
-    print()
 
 
 
